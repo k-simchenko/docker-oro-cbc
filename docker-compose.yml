@@ -27,8 +27,6 @@ services:
         volumes:
             - ./code:/code
             - ./nginx/conf.d.oro:/etc/nginx/conf.d
-            - ./log/nginx:/var/log/nginx
-            - ./php8.3/php-code:/php-code
             - ./certs:/certs
         links:
             - php8.3
@@ -37,9 +35,12 @@ services:
         build: './php8.3'
         volumes:
             - ./code:/code
-            - ./log/php:/var/log/php
-        ports:
-            - "22:22"
+            - ./php8.3/php-code/disable_xdebug.sh:/disable_xdebug.sh
+            - ./php8.3/php-code/enable_xdebug.sh:/enable_xdebug.sh
+        expose:
+            - 9000
+            - 9003
+        working_dir: /code/cbc
         links:
           - redis
           - mailcatcher
@@ -69,7 +70,7 @@ services:
             - elasticsearch8Volume:/usr/share/elasticsearch/data
         labels:
             com.symfony.server.service-prefix: ORO_SEARCH
-        restart: on-failure   
+        restart: on-failure
     rabbitmq:
         image: oroinc/rabbitmq:3.9-1-management-alpine
         ports:
@@ -84,7 +85,6 @@ services:
     redis:
         image: redis:6.2
         restart: always
-        container_name: redis
         ports:
             - 6379:6379
         environment:
