@@ -38,7 +38,7 @@ RUN \
     apt-get update && \
     apt-get install libldap2-dev -y && \
     rm -rf /var/lib/apt/lists/* && \
-    docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \ 
+    docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
     docker-php-ext-install ldap
 
 # For mac
@@ -46,13 +46,13 @@ RUN \
 #    apt-get update && \
 #    apt-get install libldap2-dev -y && \
 #    rm -rf /var/lib/apt/lists/* && \
-#    docker-php-ext-configure ldap --with-libdir=lib/aarch64-linux-gnu/ && \ 
+#    docker-php-ext-configure ldap --with-libdir=lib/aarch64-linux-gnu/ && \
 #    docker-php-ext-install ldap
 
 RUN pecl install mongodb && docker-php-ext-enable mongodb
 
 RUN apt-get update && apt-get install -y libpq-dev && docker-php-ext-install -j$(nproc) pgsql
-RUN docker-php-ext-install -j$(nproc) pdo_pgsql 
+RUN docker-php-ext-install -j$(nproc) pdo_pgsql
 
 RUN docker-php-ext-configure pcntl --enable-pcntl \
   && docker-php-ext-install pcntl;
@@ -69,8 +69,6 @@ RUN ln -s /root/.nvm/versions/node/v20.10.0/bin/node /bin/node
 RUN apt-get update && apt-get install openssh-server -y
 
 COPY ./conf.d/* /usr/local/etc/php/conf.d/
-COPY ./php-code/disable_xdebug.sh /
-COPY ./php-code/enable_xdebug.sh /
 
 COPY ./zzz-docker.conf /usr/local/etc/php-fpm.d/zzz-docker.conf
 
