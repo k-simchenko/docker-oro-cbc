@@ -7,8 +7,10 @@ RUN apt-get update && \
     apt-get install -y $requirements && \
     rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install -j$(nproc) pdo_mysql
+COPY crt /usr/local/share/ca-certificates/extra
+RUN update-ca-certificates
 
+RUN docker-php-ext-install -j$(nproc) pdo_mysql
 RUN docker-php-ext-install -j$(nproc) mbstring
 RUN docker-php-ext-install -j$(nproc) zip
 RUN docker-php-ext-install -j$(nproc) intl
